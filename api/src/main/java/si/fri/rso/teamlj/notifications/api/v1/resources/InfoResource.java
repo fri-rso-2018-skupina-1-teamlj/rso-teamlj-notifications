@@ -1,9 +1,9 @@
 package si.fri.rso.teamlj.notifications.api.v1.resources;
 
 import com.kumuluz.ee.common.runtime.EeRuntime;
-import si.fri.rso.teamlj.notifications.services.configuration.AppProperties;
 import si.fri.rso.teamlj.notifications.api.v1.dtos.HealthDto;
 import si.fri.rso.teamlj.notifications.api.v1.dtos.LoadDto;
+import si.fri.rso.teamlj.notifications.services.configuration.AppProperties;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
