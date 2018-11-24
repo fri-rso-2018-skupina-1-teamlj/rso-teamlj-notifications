@@ -1,0 +1,19 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+    - 5434:5432
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: notificationTable
+  rso-notifications:
+    image: ls8856/rso-teamlj-notifications:1.0
+    ports:
+    - 8085:8085
+    environment:
+      KUMULUZEE_DATASOURCES0_CONNECTIONURL: jdbc:postgresql://postgres:5432/notificationTable
+      KUMULUZEE_DISCOVERY_ETCD_HOSTS: http://etcd:2379
+    depends_on:
+    - postgres

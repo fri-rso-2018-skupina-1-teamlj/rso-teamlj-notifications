@@ -1,0 +1,24 @@
+kumuluzee:
+  name: rso-notifications
+  env:
+    name: dev
+  version: 1.0.0
+  server:
+    base-url: http://localhost:8085
+    http:
+      port: 8085
+  datasources:
+    - jndi-name: jdbc/notificationsDS
+      connection-url: jdbc:postgresql://192.168.1.5:5432/notificationTable
+      username: dbuser
+      password: postgres
+      max-pool-size: 20
+  config:
+    etcd:
+      hosts: http://localhost:2379
+    discovery:
+      etcd:
+        hosts: http://localhost:2379
+  app-properties:
+    external-services:
+      enabled: false
