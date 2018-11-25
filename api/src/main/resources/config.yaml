@@ -19,6 +19,10 @@ kumuluzee:
     discovery:
       etcd:
         hosts: http://localhost:2379
+  metrics:
+    web-instrumentation:
+    - name: notification-endpoint
+      url-pattern: /v1/notifications/*
   app-properties:
     external-services:
       enabled: false
