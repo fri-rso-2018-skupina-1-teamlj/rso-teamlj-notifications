@@ -39,9 +39,6 @@ public class NotificationsBean {
     @Inject
     private EntityManager em;
 
-    @Inject
-    private AppProperties appProperties;
-
     @PostConstruct
     private void init() {
         httpClient = ClientBuilder.newClient();
@@ -51,14 +48,14 @@ public class NotificationsBean {
 
     public Notification getNotification(Integer userId, Float latitude, Float longitude) {
 
-        User user = getUser(userId);
-        if (user == null) {
-            log.warning("user does not exist/user was deleted");
-            throw new NotFoundException();
-        }
+//        User user = getUser(userId);
+//        if (user == null) {
+//            log.warning("user does not exist/user was deleted");
+//            throw new NotFoundException();
+//        }
+        User user = null;
 
         // TODO - preveri a ma plačan subscription
-        // TODO
         int remainingUserSubscriptionDays = 1;
 
 
@@ -68,6 +65,8 @@ public class NotificationsBean {
             throw new NotFoundException();
         }
 
+        // TODO - currently getting nearest point even if there are no bikes left at it
+        // TODO - implement check for remaining bikes and in case of < 5 left also return another closest rent location
         float[][] locations = new float[mapEntityList.size()][2];
         String[] locationsName = new String[mapEntityList.size()];
         for (int i = 0; i < mapEntityList.size(); i++) {
@@ -86,11 +85,9 @@ public class NotificationsBean {
         String nearestRentPointName = locationsName[nearestRentPoint];
 
 
-
-        Notification notification = new Notification(nearestRentPointName, nearestRentPointLatitude,
+        Notification notification = new Notification(latitude, longitude, nearestRentPointName, nearestRentPointLatitude,
                                                      nearestRentPointLongitude,
                                                      remainingUserSubscriptionDays, user);
-
 
         return notification;
     }
@@ -101,7 +98,7 @@ public class NotificationsBean {
         float lat1 = latitude;
         float lon1 = longitude;
 
-        float tmpMin = 0;
+        float tmpMin = Float.MAX_VALUE;
         int index = 0;
 
         for (int i = 0; i < locations.length; i++) {

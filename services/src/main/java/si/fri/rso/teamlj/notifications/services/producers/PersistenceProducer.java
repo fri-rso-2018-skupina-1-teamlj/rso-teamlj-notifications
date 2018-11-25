@@ -9,7 +9,7 @@ import javax.persistence.PersistenceUnit;
 
 public class PersistenceProducer {
 
-    @PersistenceUnit(unitName = "notifications-jpa")
+//    @PersistenceUnit(unitName = "notifications-jpa")
     private EntityManagerFactory emf;
 
     @Produces

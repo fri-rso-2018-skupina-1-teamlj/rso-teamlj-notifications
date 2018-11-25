@@ -28,7 +28,7 @@ public class NotificationsResource {
     @GET
     public Response getNotifications() {
 
-        Notification notification = new Notification("test", 0, 0, 0, new User());
+        Notification notification = new Notification(0,0,"test", 0, 0, 0, new User());
 
         return Response.ok(notification).build();
     }

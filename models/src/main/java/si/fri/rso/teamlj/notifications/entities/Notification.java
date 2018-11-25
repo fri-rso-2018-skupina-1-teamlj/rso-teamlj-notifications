@@ -21,13 +21,24 @@ public class Notification {
 //    @Setter
 //    private Integer id;
 
-    public Notification(String nearbyLocationName, float nearbyLocationLatitude, float nearbyLocationLongitude, int remainingUserSubscriptionDays, User user) {
+
+    public Notification(float currentLocationLatitude, float currentLocationLongitude, String nearbyLocationName, float nearbyLocationLatitude, float nearbyLocationLongitude, int remainingUserSubscriptionDays, User user) {
+        this.currentLocationLatitude = currentLocationLatitude;
+        this.currentLocationLongitude = currentLocationLongitude;
         this.nearbyLocationName = nearbyLocationName;
         this.nearbyLocationLatitude = nearbyLocationLatitude;
         this.nearbyLocationLongitude = nearbyLocationLongitude;
         this.remainingUserSubscriptionDays = remainingUserSubscriptionDays;
         this.user = user;
     }
+
+    @Getter
+    @Setter
+    private float currentLocationLatitude;
+
+    @Getter
+    @Setter
+    private float currentLocationLongitude;
 
     @Getter
     @Setter
