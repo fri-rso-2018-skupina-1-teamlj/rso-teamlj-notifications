@@ -182,7 +182,7 @@ public class NotificationsBean {
 
         try {
             return httpClient
-                    .target(baseUrlUsers.get()  + "/v1/map")
+                    .target(baseUrlMap.get()  + "/v1/map")
 //                    .target("http://localhost:8084/v1/map")
                     .request().get(new GenericType<List<MapEntity>>() {
                     });
