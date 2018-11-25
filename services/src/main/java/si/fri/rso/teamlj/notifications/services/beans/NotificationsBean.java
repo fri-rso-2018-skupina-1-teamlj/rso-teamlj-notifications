@@ -2,6 +2,7 @@ package si.fri.rso.teamlj.notifications.services.beans;
 
 import com.kumuluz.ee.discovery.annotations.DiscoverService;
 import si.fri.rso.teamlj.notifications.dtos.MapEntity;
+import si.fri.rso.teamlj.notifications.dtos.Payment;
 import si.fri.rso.teamlj.notifications.dtos.User;
 import si.fri.rso.teamlj.notifications.entities.Notification;
 import si.fri.rso.teamlj.notifications.services.configuration.AppProperties;
@@ -16,10 +17,15 @@ import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
+
+import static java.lang.Math.toIntExact;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @RequestScoped
 public class NotificationsBean {
@@ -37,6 +43,10 @@ public class NotificationsBean {
     private Optional<String> baseUrlMap;
 
     @Inject
+    @DiscoverService("rso-payments")
+    private Optional<String> baseUrlPay;
+
+    @Inject
     private EntityManager em;
 
     @PostConstruct
@@ -48,15 +58,29 @@ public class NotificationsBean {
 
     public Notification getNotification(Integer userId, Float latitude, Float longitude) {
 
-//        User user = getUser(userId);
-//        if (user == null) {
-//            log.warning("user does not exist/user was deleted");
-//            throw new NotFoundException();
-//        }
-        User user = null;
+        User user = getUser(userId);
+        if (user == null) {
+            log.warning("user does not exist/user was deleted");
+            throw new NotFoundException();
+        }
 
-        // TODO - preveri a ma plačan subscription
-        int remainingUserSubscriptionDays = 1;
+        Payment payment = getSubscriptionInfo(userId);
+        if (payment == null) {
+            log.warning("payment does not exist");
+            throw new NotFoundException();
+        }
+
+        int remainingUserSubscriptionDaysInt;
+        if (payment.isSubscription()) {
+            Instant timeNow = Instant.now();
+            Instant endOfSubscription = payment.getEndOfSubscription();
+
+            Long remainingUserSubscriptionDays = DAYS.between(timeNow, endOfSubscription);
+            remainingUserSubscriptionDaysInt = toIntExact(remainingUserSubscriptionDays);
+        }
+        else {
+            remainingUserSubscriptionDaysInt = 0;
+        }
 
 
         List<MapEntity> mapEntityList = getMapEntities();
@@ -84,10 +108,9 @@ public class NotificationsBean {
         float nearestRentPointLongitude = locations[nearestRentPoint][1];
         String nearestRentPointName = locationsName[nearestRentPoint];
 
-
         Notification notification = new Notification(latitude, longitude, nearestRentPointName, nearestRentPointLatitude,
                                                      nearestRentPointLongitude,
-                                                     remainingUserSubscriptionDays, user);
+                                                     remainingUserSubscriptionDaysInt, user);
 
         return notification;
     }
@@ -129,9 +152,24 @@ public class NotificationsBean {
 
         try {
             return httpClient
-//                    .target(baseUrlUsers.get()  + "/v1/users?where=userId:EQ:" + userId)
-                    .target("http://localhost:8080/v1/users?where=userId:EQ:" + userId)
+                    .target(baseUrlUsers.get()  + "/v1/users/" + userId)
+//                    .target("http://localhost:8080/v1/users/" + userId)
                     .request().get(new GenericType<User>() {
+                    });
+        } catch (WebApplicationException | ProcessingException e) {
+            log.severe(e.getMessage());
+            throw new InternalServerErrorException(e);
+        }
+
+    }
+
+    public Payment getSubscriptionInfo(Integer userId) {
+
+        try {
+            return httpClient
+                    .target(baseUrlPay.get()  + "/v1/payments/subscribed/" + userId)
+//                    .target("http://localhost:8083/v1/payments/subscribed/" + userId)
+                    .request().get(new GenericType<Payment>() {
                     });
         } catch (WebApplicationException | ProcessingException e) {
             log.severe(e.getMessage());
@@ -144,8 +182,8 @@ public class NotificationsBean {
 
         try {
             return httpClient
-//                    .target(baseUrlUsers.get()  + "/v1/map")
-                    .target("http://localhost:8084/v1/map")
+                    .target(baseUrlUsers.get()  + "/v1/map")
+//                    .target("http://localhost:8084/v1/map")
                     .request().get(new GenericType<List<MapEntity>>() {
                     });
         } catch (WebApplicationException | ProcessingException e) {

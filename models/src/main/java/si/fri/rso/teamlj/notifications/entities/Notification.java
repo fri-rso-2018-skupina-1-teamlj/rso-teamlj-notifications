@@ -3,6 +3,7 @@ package si.fri.rso.teamlj.notifications.entities;
 import lombok.Getter;
 import lombok.Setter;
 import si.fri.rso.teamlj.notifications.dtos.MapEntity;
+import si.fri.rso.teamlj.notifications.dtos.Payment;
 import si.fri.rso.teamlj.notifications.dtos.User;
 
 import javax.persistence.Transient;
@@ -65,5 +66,10 @@ public class Notification {
     @Getter
     @Setter
     private User user;
+
+    @Transient
+    @Getter
+    @Setter
+    private Payment payment;
 
 }
