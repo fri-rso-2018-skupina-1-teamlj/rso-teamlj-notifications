@@ -7,12 +7,12 @@ kumuluzee:
     base-url: http://localhost:8085
     http:
       port: 8085
-  datasources:
-    - jndi-name: jdbc/notificationsDS
-      connection-url: jdbc:postgresql://192.168.1.5:5432/notificationTable
-      username: dbuser
-      password: postgres
-      max-pool-size: 20
+  #datasources:
+  #  - jndi-name: jdbc/notificationsDS
+  #    connection-url: jdbc:postgresql://192.168.1.5:5432/notificationTable
+  #    username: dbuser
+  #    password: postgres
+  #    max-pool-size: 20
   config:
     etcd:
       hosts: http://localhost:2379

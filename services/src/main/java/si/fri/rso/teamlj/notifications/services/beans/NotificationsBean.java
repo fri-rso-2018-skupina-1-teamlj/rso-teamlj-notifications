@@ -132,8 +132,8 @@ public class NotificationsBean {
 
         try {
             return httpClient
-                    .target(baseUrlUsers.get()  + "/v1/users?where=userId:EQ:" + userId)
-                    //.target("http://localhost:8080/v1/users?where=userId:EQ:" + userId)
+//                    .target(baseUrlUsers.get()  + "/v1/users?where=userId:EQ:" + userId)
+                    .target("http://localhost:8080/v1/users?where=userId:EQ:" + userId)
                     .request().get(new GenericType<User>() {
                     });
         } catch (WebApplicationException | ProcessingException e) {
@@ -147,8 +147,8 @@ public class NotificationsBean {
 
         try {
             return httpClient
-                    .target(baseUrlUsers.get()  + "/v1/map")
-                    //.target("http://localhost:8084/v1/map)
+//                    .target(baseUrlUsers.get()  + "/v1/map")
+                    .target("http://localhost:8084/v1/map")
                     .request().get(new GenericType<List<MapEntity>>() {
                     });
         } catch (WebApplicationException | ProcessingException e) {

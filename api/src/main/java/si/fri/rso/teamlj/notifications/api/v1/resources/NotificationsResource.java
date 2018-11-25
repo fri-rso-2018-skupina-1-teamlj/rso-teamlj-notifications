@@ -1,5 +1,6 @@
 package si.fri.rso.teamlj.notifications.api.v1.resources;
 
+import si.fri.rso.teamlj.notifications.dtos.User;
 import si.fri.rso.teamlj.notifications.entities.Notification;
 import si.fri.rso.teamlj.notifications.services.beans.NotificationsBean;
 
@@ -22,6 +23,15 @@ public class NotificationsResource {
 
     @Inject
     private NotificationsBean notificationsBean;
+
+    //TEST CALL
+    @GET
+    public Response getNotifications() {
+
+        Notification notification = new Notification("test", 0, 0, 0, new User());
+
+        return Response.ok(notification).build();
+    }
 
 
     @GET
