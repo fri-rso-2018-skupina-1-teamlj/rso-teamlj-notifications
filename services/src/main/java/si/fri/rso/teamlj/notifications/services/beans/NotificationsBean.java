@@ -19,6 +19,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -64,16 +65,16 @@ public class NotificationsBean {
             throw new NotFoundException();
         }
 
-        Payment payment = getSubscriptionInfo(userId);
-        if (payment == null) {
+        String resultPayment = getSubscriptionInfo(userId);
+        if (resultPayment == null) {
             log.warning("payment does not exist");
             throw new NotFoundException();
         }
 
         int remainingUserSubscriptionDaysInt;
-        if (payment.isSubscription()) {
+        if (!resultPayment.equals("Ni veljavne naročnine")) {
             Instant timeNow = Instant.now();
-            Instant endOfSubscription = payment.getEndOfSubscription();
+            Instant endOfSubscription = Instant.parse(resultPayment);
 
             Long remainingUserSubscriptionDays = DAYS.between(timeNow, endOfSubscription);
             remainingUserSubscriptionDaysInt = toIntExact(remainingUserSubscriptionDays);
@@ -163,14 +164,17 @@ public class NotificationsBean {
 
     }
 
-    public Payment getSubscriptionInfo(Integer userId) {
+    public String getSubscriptionInfo(Integer userId) {
 
         try {
-            return httpClient
+            Response response =  httpClient
                     .target(baseUrlPay.get()  + "/v1/payments/subscribed/" + userId)
 //                    .target("http://localhost:8083/v1/payments/subscribed/" + userId)
-                    .request().get(new GenericType<Payment>() {
-                    });
+                    .request()
+                    .build("POST", Entity.json(""))
+                    .invoke();
+
+            return response.getEntity().toString();
         } catch (WebApplicationException | ProcessingException e) {
             log.severe(e.getMessage());
             throw new InternalServerErrorException(e);
@@ -182,8 +186,8 @@ public class NotificationsBean {
 
         try {
             return httpClient
-                    .target(baseUrlMap.get()  + "/v1/map")
-//                    .target("http://localhost:8084/v1/map")
+//                    .target(baseUrlMap.get()  + "/v1/map")
+                    .target("http://localhost:8084/v1/map")
                     .request().get(new GenericType<List<MapEntity>>() {
                     });
         } catch (WebApplicationException | ProcessingException e) {
