@@ -13,12 +13,9 @@ kumuluzee:
   #    username: dbuser
   #    password: postgres
   #    max-pool-size: 20
-  config:
+  discovery:
     etcd:
       hosts: http://localhost:2379
-    discovery:
-      etcd:
-        hosts: http://localhost:2379
   metrics:
     web-instrumentation:
     - name: notification-endpoint

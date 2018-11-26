@@ -14,13 +14,11 @@ spec:
     spec:
       containers:
       - name: notifications
-        image: ls8856/rso-teamlj-notifications:1.0
+        image: ls8856/rso-teamlj-notifications:1.1
         env:
           - name: KUMULUZEE_DISCOVERY_CLUSTER
             value: gcloud
           - name: KUMULUZEE_DISCOVERY_ETCD_HOSTS
-            value: http://etcd:2379
-          - name: KUMULUZEE_CONFIG_ETCD_HOSTS
             value: http://etcd:2379
         ports:
         - containerPort: 8085
