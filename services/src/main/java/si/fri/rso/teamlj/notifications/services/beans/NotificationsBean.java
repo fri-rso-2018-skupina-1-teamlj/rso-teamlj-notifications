@@ -171,7 +171,7 @@ public class NotificationsBean {
                     .target(baseUrlPay.get()  + "/v1/payments/subscribed/" + userId)
 //                    .target("http://localhost:8083/v1/payments/subscribed/" + userId)
                     .request()
-                    .build("POST", Entity.json(""))
+                    .build("PUT", Entity.json(""))
                     .invoke();
 
             return response.getEntity().toString();
