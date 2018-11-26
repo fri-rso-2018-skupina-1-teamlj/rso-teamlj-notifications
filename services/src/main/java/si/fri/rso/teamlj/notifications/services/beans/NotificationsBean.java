@@ -168,8 +168,8 @@ public class NotificationsBean {
 
         try {
             Response response =  httpClient
-//                    .target(baseUrlPay.get()  + "/v1/payments/subscribed/" + userId)
-                    .target("http://localhost:8083/v1/payments/subscribed/" + userId)
+                    .target(baseUrlPay.get()  + "/v1/payments/subscribed/" + userId)
+//                    .target("http://localhost:8083/v1/payments/subscribed/" + userId)
                     .request()
                     .build("PUT", Entity.json(""))
                     .invoke();
@@ -187,8 +187,8 @@ public class NotificationsBean {
 
         try {
             return httpClient
-//                    .target(baseUrlMap.get()  + "/v1/map")
-                    .target("http://localhost:8084/v1/map")
+                    .target(baseUrlMap.get()  + "/v1/map")
+//                    .target("http://localhost:8084/v1/map")
                     .request().get(new GenericType<List<MapEntity>>() {
                     });
         } catch (WebApplicationException | ProcessingException e) {
