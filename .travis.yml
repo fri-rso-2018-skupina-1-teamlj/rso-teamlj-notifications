@@ -14,7 +14,7 @@ cache:
   - $HOME/.m2
 
 env:
-- DOCKER_IMAGE=ls8856/rso-teamlj-notifications:2.4
+- DOCKER_IMAGE=ls8856/rso-teamlj-notifications:2.5
 
 script:
 - mvn clean package -U
