@@ -167,8 +167,8 @@ public class NotificationsBean {
 
         try {
             return httpClient
-//                    .target(baseUrlUsers.get()  + "/v1/users/" + userId)
-                    .target("http://localhost:8080/v1/users/" + userId)
+                    .target(baseUrlUsers.get()  + "/v1/users/" + userId)
+//                    .target("http://localhost:8080/v1/users/" + userId)
                     .request().get(new GenericType<User>() {
                     });
         } catch (WebApplicationException | ProcessingException e) {
