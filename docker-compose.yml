@@ -1,7 +1,7 @@
 version: "3"
 services:
   rso-notifications:
-    image: ls8856/rso-teamlj-notifications:2.3
+    image: ls8856/rso-teamlj-notifications:2.4
     ports:
     - 8085:8085
     environment:
