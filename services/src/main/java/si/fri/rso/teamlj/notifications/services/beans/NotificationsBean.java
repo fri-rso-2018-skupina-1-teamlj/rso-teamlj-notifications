@@ -69,7 +69,7 @@ public class NotificationsBean {
     @Timed(name = "get_notification_timed")
     @Counted(name = "get_notification_counter")
     @CircuitBreaker(requestVolumeThreshold = 3)
-    @Timeout(value = 2, unit = ChronoUnit.SECONDS)
+    @Timeout(value = 10, unit = ChronoUnit.SECONDS)
     @Fallback(fallbackMethod = "getNotificationFallback")
     public Notification getNotification(Integer userId, Float latitude, Float longitude) {
 
