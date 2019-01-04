@@ -13,6 +13,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.ArrayList;
 
 @ApplicationScoped
 @Path("/notifications")
@@ -31,7 +32,7 @@ public class NotificationsResource {
     @GET
     public Response getNotifications() {
 
-        Notification notification = new Notification(0,0,"test", 0, 0, 0, new User());
+        Notification notification = new Notification(0,0,"test", 0, 0, 0, new User(), new ArrayList<>());
 
         return Response.ok(notification).build();
     }
