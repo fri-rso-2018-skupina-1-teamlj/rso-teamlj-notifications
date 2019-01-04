@@ -1,9 +1,11 @@
 package si.fri.rso.teamlj.notifications.api.v1.resources;
 
+import com.kumuluz.ee.logs.cdi.Log;
 import si.fri.rso.teamlj.notifications.dtos.User;
 import si.fri.rso.teamlj.notifications.entities.Notification;
 import si.fri.rso.teamlj.notifications.services.beans.NotificationsBean;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -12,8 +14,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-@RequestScoped
+@ApplicationScoped
 @Path("/notifications")
+@Log
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class NotificationsResource {

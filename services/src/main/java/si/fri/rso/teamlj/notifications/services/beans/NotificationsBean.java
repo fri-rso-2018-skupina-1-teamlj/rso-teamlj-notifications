@@ -1,6 +1,11 @@
 package si.fri.rso.teamlj.notifications.services.beans;
 
 import com.kumuluz.ee.discovery.annotations.DiscoverService;
+import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
+import org.eclipse.microprofile.faulttolerance.Fallback;
+import org.eclipse.microprofile.faulttolerance.Timeout;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 import si.fri.rso.teamlj.notifications.dtos.MapEntity;
 import si.fri.rso.teamlj.notifications.dtos.Payment;
 import si.fri.rso.teamlj.notifications.dtos.User;
@@ -21,6 +26,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -56,7 +62,11 @@ public class NotificationsBean {
         //baseUrl = "http://localhost:8085"; // notifications
     }
 
-
+    @Timed(name = "get_notification_timed")
+    @Counted(name = "get_notification_counter")
+    @CircuitBreaker(requestVolumeThreshold = 3)
+    @Timeout(value = 2, unit = ChronoUnit.SECONDS)
+    @Fallback(fallbackMethod = "getNotificationFallback")
     public Notification getNotification(Integer userId, Float latitude, Float longitude) {
 
         User user = getUser(userId);
@@ -90,8 +100,6 @@ public class NotificationsBean {
             throw new NotFoundException();
         }
 
-        // TODO - currently getting nearest point even if there are no bikes left at it
-        // TODO - implement check for remaining bikes and in case of < 5 left also return another closest rent location
         float[][] locations = new float[mapEntityList.size()][2];
         String[] locationsName = new String[mapEntityList.size()];
         for (int i = 0; i < mapEntityList.size(); i++) {
@@ -114,6 +122,12 @@ public class NotificationsBean {
                                                      remainingUserSubscriptionDaysInt, user);
 
         return notification;
+    }
+
+    public Notification getNotificationFallback(Integer userId, Float latitude, Float longitude) {
+
+        log.warning("getNotificationFallback method called");
+        return new Notification();
     }
 
     public int getNearestRentPoint(float latitude, float longitude, float[][] locations) {

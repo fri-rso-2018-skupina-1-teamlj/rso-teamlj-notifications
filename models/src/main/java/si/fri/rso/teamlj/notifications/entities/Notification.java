@@ -22,6 +22,9 @@ public class Notification {
 //    @Setter
 //    private Integer id;
 
+    public Notification() {
+
+    }
 
     public Notification(float currentLocationLatitude, float currentLocationLongitude, String nearbyLocationName, float nearbyLocationLatitude, float nearbyLocationLongitude, int remainingUserSubscriptionDays, User user) {
         this.currentLocationLatitude = currentLocationLatitude;
