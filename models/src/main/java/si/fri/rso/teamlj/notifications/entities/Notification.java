@@ -26,7 +26,10 @@ public class Notification {
 
     }
 
-    public Notification(float currentLocationLatitude, float currentLocationLongitude, String nearbyLocationName, float nearbyLocationLatitude, float nearbyLocationLongitude, int remainingUserSubscriptionDays, User user) {
+    public Notification(float currentLocationLatitude, float currentLocationLongitude,
+                        String nearbyLocationName, float nearbyLocationLatitude,
+                        float nearbyLocationLongitude, int remainingUserSubscriptionDays,
+                        User user, List<Integer> bikeIds) {
         this.currentLocationLatitude = currentLocationLatitude;
         this.currentLocationLongitude = currentLocationLongitude;
         this.nearbyLocationName = nearbyLocationName;
@@ -34,6 +37,7 @@ public class Notification {
         this.nearbyLocationLongitude = nearbyLocationLongitude;
         this.remainingUserSubscriptionDays = remainingUserSubscriptionDays;
         this.user = user;
+        this.bikeIds = bikeIds;
     }
 
     @Getter
@@ -74,5 +78,10 @@ public class Notification {
     @Getter
     @Setter
     private Payment payment;
+
+    @Transient
+    @Getter
+    @Setter
+    private List<Integer> bikeIds;
 
 }

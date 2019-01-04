@@ -54,6 +54,10 @@ public class NotificationsBean {
     private Optional<String> baseUrlPay;
 
     @Inject
+    @DiscoverService("rso-bikes")
+    private Optional<String> baseUrlBike;
+
+    @Inject
     private EntityManager em;
 
     @PostConstruct
@@ -117,9 +121,14 @@ public class NotificationsBean {
         float nearestRentPointLongitude = locations[nearestRentPoint][1];
         String nearestRentPointName = locationsName[nearestRentPoint];
 
-        Notification notification = new Notification(latitude, longitude, nearestRentPointName, nearestRentPointLatitude,
+        List<Integer> bikeIds = getBikeIds(nearestRentPointLatitude, nearestRentPointLongitude);
+
+        Notification notification = new Notification(latitude, longitude,
+                                                     nearestRentPointName,
+                                                     nearestRentPointLatitude,
                                                      nearestRentPointLongitude,
-                                                     remainingUserSubscriptionDaysInt, user);
+                                                     remainingUserSubscriptionDaysInt,
+                                                     user, bikeIds);
 
         return notification;
     }
@@ -204,6 +213,20 @@ public class NotificationsBean {
                     .target(baseUrlMap.get()  + "/v1/map")
 //                    .target("http://localhost:8084/v1/map")
                     .request().get(new GenericType<List<MapEntity>>() {
+                    });
+        } catch (WebApplicationException | ProcessingException e) {
+            log.severe(e.getMessage());
+            throw new InternalServerErrorException(e);
+        }
+
+    }
+
+    public List<Integer> getBikeIds(float latitude, float longitude) {
+
+        try {
+            return httpClient
+                    .target(baseUrlBike.get()  + "/v1/bikes/" + latitude + "&" + longitude)
+                    .request().get(new GenericType<List<Integer>>() {
                     });
         } catch (WebApplicationException | ProcessingException e) {
             log.severe(e.getMessage());
